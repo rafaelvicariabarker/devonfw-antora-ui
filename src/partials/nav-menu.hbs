@@ -1,10 +1,30 @@
-{{#with page.navigation}}
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    {{#with @root.page.componentVersion}}
-    <h3 class="title"><a href="{{{relativize ./url}}}">{{./title}}</a></h3>
-    {{/with}}
-{{> nav-tree navigation=this}}
-  </nav>
-</div>
-{{/with}}
+{{#if page.navigation}}
+  {{#each site.components}}
+    <div class="nav-trees">
+      <div class="version-box">
+        <select data-component="{{this.name}}" class="select-version">
+          {{#each this.versions}}
+            <option value="{{this.version}}">
+              {{this.displayVersion}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+      {{#each this.versions}}
+        <div data-component="{{../name}}" data-version="{{this.version}}" class="{{#unless (eq ./version ../latestVersion.version)}}hide{{/unless}}">
+          <div class="nav-item is-link">
+            {{#if ./navigation.length}}
+              <button class="nav-item-toggle"></button>
+            {{/if}}
+            <a  class="{{#unless ./navigation.length}}spacer{{/unless}}{{#if (eq @root.page.url ./url)}} is-current-page{{/if}}" href="{{{relativize ./url}}}">
+              {{{./title}}}
+            </a>
+          </div>
+          <div class="nav-children-panel hide">
+            {{> nav-tree navigation=./navigation }}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/each}}
+{{/if}}

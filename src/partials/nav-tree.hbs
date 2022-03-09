@@ -1,21 +1,25 @@
-{{#if navigation.length}}
-<ul class="nav-list">
-  {{#each navigation}}
-  <li class="nav-item{{#if (eq ./url @root.page.url)}} is-current-page{{/if}}" data-depth="{{or ../level 0}}">
-    {{#if ./content}}
-    {{#if ./items.length}}
-    <button class="nav-item-toggle"></button>
+{{#if navigation.length}} {{!-- only do stuff if there are nav items to show --}}
+  {{#each navigation}} {{!-- iterate over nav items --}}
+    {{#if ./content}} {{!-- if there's content, then show it --}}
+      <div class="nav-item {{#if ./url}}is-link{{/if}}">
+        {{#if ./items.length}}<button class="nav-item-toggle"></button>{{/if}}
+        {{#if ./url}} {{!-- url for nav-item, so make it a link --}}
+          {{~#if (eq ./urlType 'internal')}} {{!-- link is internal, relativize url --}}
+            <a  class="{{#unless ./items.length}}spacer{{/unless}}{{#if (eq @root.page.url ./url)}} is-current-page{{/if}}" href="{{relativize ./url}}">{{{./content}}}</a>
+          {{~else}} {{!-- just send to url --}}
+            <a class="{{#unless ./items.length}}spacer{{/unless}}{{#if (eq @root.page.url ./url)}} is-current-page{{/if}}" href="{{{./url}}}">{{{./content}}}</a>
+          {{~/if}}
+        {{else}} {{!-- no url for nav-item, so just display as span --}}
+          <span class="{{#unless ./items.length}}spacer{{/unless}}{{#if (eq @root.page.url ./url)}} is-current-page{{/if}}">{{{./content}}}</span>
+        {{/if}}
+      </div>
+      {{#if ./items.length}} {{!-- nav item has sub nav items --}}
+        <div class="nav-children-panel hide">
+          {{> nav-tree navigation=./items}}
+        </div>
+      {{/if}}
+    {{else}} {{!-- no content, so just keep going --}}
+      {{> nav-tree navigation=./items}}
     {{/if}}
-    {{#if ./url}}
-    <a class="nav-link" href="
-      {{~#if (eq ./urlType 'internal')}}{{{relativize ./url}}}
-      {{~else}}{{{./url}}}{{~/if}}">{{{./content}}}</a>
-    {{else}}
-    <span class="nav-text">{{{./content}}}</span>
-    {{/if}}
-    {{/if}}
-{{> nav-tree navigation=./items level=(increment ../level)}}
-  </li>
   {{/each}}
-</ul>
 {{/if}}

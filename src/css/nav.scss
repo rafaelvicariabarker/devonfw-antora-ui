@@ -1,26 +1,86 @@
 .nav-container {
-  position: fixed;
-  top: var(--navbar-height);
-  left: 0;
-  width: 100%;
-  font-size: calc(17 / var(--rem-base) * 1rem);
-  z-index: var(--z-index-nav);
-  visibility: hidden;
+  box-shadow: none;
+  background: var(--nav-background);
+
+
+  .show-more + span {
+    position: relative;
+    left: 3px;
+  }
+
+  .nav-item-toggle {
+    background: transparent url(../img/chevron.svg) no-repeat center / 50%;
+    color: black;
+    font-size: 1rem;
+    min-width: 1rem;
+    transition: all $expand-animation-time ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.expanded {
+      transform: rotate(90deg);
+      transition: all $expand-animation-time ease-in-out;
+    }
+  }
+
+  .nav-item {
+    font-size: 0.75rem;
+    max-width: 16rem;
+    color: black;
+    vertical-align: middle;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+
+    display: table;
+
+    /* Setup word wrapping. overflow-wrap and word-wrap are aliases but some
+       browsers support one and not the other. Similarly, webkit only respects
+       break-word for word-break. */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    word-wrap: break-word;
+
+    &.is-link:hover {
+      color: $mdc-theme-secondary;
+    }
+
+    &:not(.is-link):hover {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+      display: table-cell;
+      vertical-align: middle;
+
+      &:hover {
+        @extend .nav-item.is-link:hover;
+      }
+    }
+
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    & .is-current-page {
+      color: $mdc-theme-secondary;
+    }
+  }
+
+  .nav-item .spacer {
+    display: inline-block;
+    padding-left: 1.2rem;
+  }
 }
 
 @media screen and (min-width: 769px) {
   .nav-container {
     width: var(--nav-width);
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .nav-container {
-    font-size: calc(15.5 / var(--rem-base) * 1rem);
-    flex: none;
-    position: static;
-    top: 0;
-    visibility: visible;
   }
 }
 
@@ -56,6 +116,77 @@
   height: inherit;
 }
 
+.nav-children-panel {
+  display: block;
+  padding-left: 0.5rem;
+  overflow: auto;
+  min-width: 5rem;
+  transition: max-height $expand-animation-time ease-out;
+}
+
+.nav-trees {
+  max-width: 100%;
+  margin: 0;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 0.2rem 0;
+}
+
+.version-box {
+  margin: 0;
+  float: right;
+  display: inline-block;
+  margin-top: 0.3rem;
+
+  span {
+    color: $light-gray;
+    padding-left: 1.2rem;
+    padding-top: -0.1rem;
+    font-size: 0.75rem;
+  }
+
+  .single-version:hover {
+    border-color: white;
+    color: white;
+  }
+
+  .single-version {
+    background-color: white;
+    border-color: white;
+    color: white;
+  }
+}
+
+.select-version {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--color-gray-10);
+  padding: 0.1rem;
+  box-sizing: border-box;
+  margin: 0;
+  border: 1px solid var(--color-gray-10);
+  border-radius: 0.5rem;
+  -moz-appearance: none;
+}
+
+.select-version::-ms-expand {
+  display: none;
+}
+
+.select-version:hover {
+  border-color: var(--color-gray-70);
+  color: var(--color-gray-70);
+}
+
+.select-version:focus {
+  color: var(--color-gray-70);
+  border-color: var(--color-gray-70);
+  outline: none;
+}
+
+.select-version option {
+  font-weight: normal;
+}
 html.is-clipped--nav {
   overflow-y: hidden;
 }
@@ -114,12 +245,10 @@ html.is-clipped--nav {
   margin-top: 0.5em;
 }
 
-/* adds some breathing room below a nested list */
 .nav-item-toggle ~ .nav-list {
   padding-bottom: 0.125rem;
 }
 
-/* matches list without a title */
 .nav-item[data-depth="0"] > .nav-list:first-child {
   display: block;
   margin: 0;
@@ -130,7 +259,7 @@ html.is-clipped--nav {
 }
 
 .nav-item-toggle {
-  background: transparent url(../img/caret.svg) no-repeat center / 50%;
+  background: transparent url(../img/chevron.svg) no-repeat center / 50%;
   border: none;
   outline: none;
   line-height: inherit;
@@ -139,6 +268,7 @@ html.is-clipped--nav {
   width: calc(var(--nav-line-height) * 1em);
   margin-top: -0.05em;
   margin-left: calc(var(--nav-line-height) * -1em);
+  transform: rotate(-90deg)
 }
 
 .nav-item.is-active > .nav-item-toggle {
@@ -253,4 +383,24 @@ html.is-clipped--nav {
   border-color: currentColor;
   opacity: 0.9;
   font-weight: var(--body-font-weight-bold);
+}
+
+.clear {
+  clear: both;
+}
+
+@media screen and (min-width: 1025px) {
+  .nav-container {
+    min-width: $nav-width;
+    aside {
+      @include mdc-elevation(4);
+      padding-top: 5rem;
+      padding-left: 0.5rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+      width: $nav-width;
+    }
+  }
 }

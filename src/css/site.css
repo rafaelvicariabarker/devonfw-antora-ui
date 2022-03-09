@@ -3,7 +3,7 @@
 @import "vars.css";
 @import "base.css";
 @import "body.css";
-@import "nav.css";
+@import "nav.scss";
 @import "main.css";
 @import "toolbar.css";
 @import "breadcrumbs.css";
